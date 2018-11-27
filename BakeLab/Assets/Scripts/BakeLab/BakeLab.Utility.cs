@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#pragma warning disable
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Math = System.Math;

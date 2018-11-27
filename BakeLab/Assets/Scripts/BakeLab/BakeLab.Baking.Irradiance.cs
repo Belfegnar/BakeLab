@@ -68,7 +68,8 @@ namespace BelfegnarInc.BakeLab {
 				probeGroup.probePositions = probePositions;
 				UnityEditor.EditorUtility.SetDirty (LightmapSettings.lightProbes);
 				UnityEditor.SceneView.RepaintAll ();
-				var bakeResult = UnityEditor.Lightmapping.Bake ();
+				/*var bakeResult = */
+				UnityEditor.Lightmapping.Bake ();
 #endif
 
 #if DEBUG
@@ -154,7 +155,8 @@ namespace BelfegnarInc.BakeLab {
 				probeGroup.probePositions = probePositions;
 				UnityEditor.EditorUtility.SetDirty (LightmapSettings.lightProbes);
 				UnityEditor.SceneView.RepaintAll ();
-				var bakeResult = UnityEditor.Lightmapping.Bake ();
+				/*var bakeResult = */
+				UnityEditor.Lightmapping.Bake ();
 #endif
 
 #if DEBUG
@@ -180,7 +182,7 @@ namespace BelfegnarInc.BakeLab {
 #endif
 					Vector3 sampleNorm = sampleNormals[i + sampleOffset];
 					Vector4 sampleTang = sampleTangents[i + sampleOffset];
-					Vector3 samplePos = samplePositions[i + sampleOffset];
+					//Vector3 samplePos = samplePositions[i + sampleOffset];
 					onb = new Onb (sampleNorm, sampleTang);
 					dirs[0] = basis[0];
 					dirs[1] = basis[1];
@@ -263,7 +265,8 @@ namespace BelfegnarInc.BakeLab {
 				probeGroup.probePositions = probePositions;
 				UnityEditor.EditorUtility.SetDirty (LightmapSettings.lightProbes);
 				UnityEditor.SceneView.RepaintAll ();
-				var bakeResult = UnityEditor.Lightmapping.Bake ();
+				/*var bakeResult = */
+				UnityEditor.Lightmapping.Bake ();
 #endif
 
 #if DEBUG
@@ -281,7 +284,7 @@ namespace BelfegnarInc.BakeLab {
 						return;
 #endif
 					Vector3 sampleNorm = sampleNormals[i + sampleOffset];
-					Vector3 samplePos = samplePositions[i + sampleOffset];
+					//Vector3 samplePos = samplePositions[i + sampleOffset];
 					dirs[0] = sampleNorm;
 
 					LightProbes.GetInterpolatedProbe (probePositions[i] + sampleNorm * sceneOffset, null, out sh);

@@ -8,9 +8,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 4788ba4505ab56043adaac718b41dff3, type: 3}
   m_Name: Radiance
-  m_EditorClassIdentifier: Assembly-CSharp:BelfegnarInc.BakeLab:BakeLabConfig
+  m_EditorClassIdentifier: 
   signalType: 2
   packStyle: 3
   numSamples: 0

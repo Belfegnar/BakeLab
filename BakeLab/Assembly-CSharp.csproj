@@ -94,8 +94,9 @@
      <Compile Include="Assets\Scripts\BakeLab\BakeLab.Baking.Irradiance.cs" />
      <Compile Include="Assets\Scripts\BakeLab\BakeLab.Filter.cs" />
      <Compile Include="Assets\Scripts\BakeLab\BakeLab.Sample.cs" />
+     <Compile Include="Assets\Scripts\BakeLab\BakeLab.Utility.cs" />
+     <Compile Include="Assets\Scripts\BakeLab\BakeLabConfig.cs" />
      <Compile Include="Assets\Scripts\BakeLab\BakeLabMain.cs" />
-     <Compile Include="Assets\Scripts\BakeLab\BakeLan.Utility.cs" />
      <Compile Include="Assets\Scripts\BakeLab\RadianceAnimator.cs" />
      <Compile Include="Assets\Scripts\VertexStreamComponent.cs" />
      <None Include="Assets\Scripts\Resources\Irradiance.shader" />

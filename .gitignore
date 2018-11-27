@@ -1,5 +1,8 @@
 *.sln
 .vscode
+*.csproj
+*.userprefs
+Assets/Resources
+Library
 obj
 Temp
-*.meta
