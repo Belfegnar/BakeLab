@@ -5,7 +5,7 @@
 Shader "BelfegnarInc/Baking/Radiance" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
-		_NormalTex ("Normal (XYZ*0.5+0.5)", 2D) = "gray" {}
+		_BumpMap ("Normal (XYZ*0.5+0.5)", 2D) = "bump" {}
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -33,16 +33,15 @@ Shader "BelfegnarInc/Baking/Radiance" {
 			};
 			
 			sampler2D _MainTex;
-			sampler2D _NormalTex;
+			sampler2D _BumpMap;
 			float4 _MainTex_ST;
-			uniform float4 _Animation;
 			
 			v2f vert (appdata v)
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.texcoord = TRANSFORM_TEX(v.texcoord, _MainTex);
-				o.color = (dot(v.occl, _Animation)).xxx;
+				o.color = v.occl.xxx;
 				return o;
 			}
 	

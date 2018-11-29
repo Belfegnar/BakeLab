@@ -264,11 +264,11 @@ namespace BelfegnarInc.BakeLab {
 			float intensity = 0;
 			for (int l = 0; l < lights.Length; l++) {
 				if (lights[l].type == LightType.Directional) {
-					intensity = lights[l].intensity * lights[l].color.grayscale;
+					intensity = lights[l].intensity; // * lights[l].color.grayscale;
 					lightDir = lights[l].transform.forward;
 					for (int l2 = l + 1; l2 < lights.Length; l2++) {
 						if (lights[l2].type == LightType.Directional) {
-							float intensity2 = lights[l2].intensity * lights[l2].color.grayscale;
+							float intensity2 = lights[l2].intensity; // * lights[l2].color.grayscale;
 							if (intensity2 > intensity) {
 								intensity = intensity2;
 								lightDir = lights[l2].transform.forward;
@@ -303,6 +303,7 @@ namespace BelfegnarInc.BakeLab {
 			Vector3 dir = lightDir;
 
 #if DEBUG
+			Debug.Log ("dir = " + (lightDir * intensity) + ", intensity = " + intensity);
 			Debug.Log ("LightDir = " + lightDir + ", sample_offset = " + sampleOffset + ", scene_maxdistance = " + sceneMaxdistance);
 			setupTimer.Stop ();
 			queryTimer.Start ();
@@ -332,12 +333,15 @@ namespace BelfegnarInc.BakeLab {
 					}
 				}
 
-				if (inten <= 0) {
+				if (inten <= 0 && numPointLights != 0) {
 					dirValues[i + sampleOffset] = 0;
 				} else {
-					dir += (samplePos - lightPos.xyz ()).normalized * inten;
-					float mag = dir.magnitude;
-					dir *= 1f / mag; //.Normalize ();
+					float mag = 1f;
+					if (numPointLights != 0) {
+						dir += (samplePos - lightPos.xyz ()).normalized * inten;
+						mag = dir.magnitude;
+						dir *= 1f / mag; //.Normalize ();
+					}
 
 					Onb onb = new Onb (sampleNorm, sampleTang);
 					onb.Transform (ref dir);

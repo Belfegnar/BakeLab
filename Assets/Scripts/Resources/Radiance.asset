@@ -11,13 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4788ba4505ab56043adaac718b41dff3, type: 3}
   m_Name: Radiance
   m_EditorClassIdentifier: 
-  signalType: 2
+  signalType: 1
   packStyle: 3
   numSamples: 0
-  minSamplesPerFace: 3
+  minSamplesPerFace: 27
   numRays: 64
   filterMode: 1
-  regularizationWeight: 0.5
+  regularizationWeight: 0.25
   sceneOffsetScale: 0.001
   sceneMaxdistanceScale: 1.1
   sceneMaxdistance: 0

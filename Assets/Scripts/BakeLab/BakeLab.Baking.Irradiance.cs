@@ -139,9 +139,9 @@ namespace BelfegnarInc.BakeLab {
 
 				Vector3[] probePositions = new Vector3[numSamples + 8];
 				for (int i = 0; i < numSamples; i++) {
-					//Vector3 sampleNorm = sampleNormals[i + sampleOffset];
+					Vector3 sampleNorm = sampleNormals[i + sampleOffset];
 					Vector3 samplePos = samplePositions[i + sampleOffset];
-					probePositions[i] = samplePos; // + sampleNorm * sceneOffset;
+					probePositions[i] = samplePos + sampleNorm * sceneOffset;
 				}
 				probePositions[numSamples] = scene.bounds.min;
 				probePositions[numSamples + 1] = scene.bounds.max;
@@ -193,7 +193,7 @@ namespace BelfegnarInc.BakeLab {
 					if (i == 0) {
 						Debug.Log (string.Format ("{0}, {1}, {2}", dirs[0], dirs[1], dirs[2]));
 					}
-					LightProbes.GetInterpolatedProbe (probePositions[i] + sampleNorm * sceneOffset, null, out sh);
+					LightProbes.GetInterpolatedProbe (probePositions[i] /* + sampleNorm * sceneOffset*/ , null, out sh);
 					sh.Evaluate (dirs, colors);
 					if (i == 0) {
 						Debug.Log (string.Format ("{0}, {1}, {2}", colors[0], colors[1], colors[2]));
@@ -249,9 +249,9 @@ namespace BelfegnarInc.BakeLab {
 
 				Vector3[] probePositions = new Vector3[numSamples + 8];
 				for (int i = 0; i < numSamples; i++) {
-					//Vector3 sampleNorm = sampleNormals[i + sampleOffset];
+					Vector3 sampleNorm = sampleNormals[i + sampleOffset];
 					Vector3 samplePos = samplePositions[i + sampleOffset];
-					probePositions[i] = samplePos; // + sampleNorm * sceneOffset;
+					probePositions[i] = samplePos + sampleNorm * sceneOffset;
 				}
 				probePositions[numSamples] = scene.bounds.min;
 				probePositions[numSamples + 1] = scene.bounds.max;
@@ -262,6 +262,8 @@ namespace BelfegnarInc.BakeLab {
 				probePositions[numSamples + 6] = scene.bounds.min + new Vector3 (0, scene.bounds.size.y, scene.bounds.size.z);
 				probePositions[numSamples + 7] = scene.bounds.min + new Vector3 (scene.bounds.size.x, 0, scene.bounds.size.z);
 #if UNITY_EDITOR
+				var oldGiWorkflowMode = UnityEditor.Lightmapping.giWorkflowMode;
+				UnityEditor.Lightmapping.giWorkflowMode = UnityEditor.Lightmapping.GIWorkflowMode.OnDemand;
 				probeGroup.probePositions = probePositions;
 				UnityEditor.EditorUtility.SetDirty (LightmapSettings.lightProbes);
 				UnityEditor.SceneView.RepaintAll ();
@@ -287,7 +289,7 @@ namespace BelfegnarInc.BakeLab {
 					//Vector3 samplePos = samplePositions[i + sampleOffset];
 					dirs[0] = sampleNorm;
 
-					LightProbes.GetInterpolatedProbe (probePositions[i] + sampleNorm * sceneOffset, null, out sh);
+					LightProbes.GetInterpolatedProbe (probePositions[i] /* + sampleNorm * sceneOffset*/ , null, out sh);
 					sh.Evaluate (dirs, colors);
 					int coef = 0;
 					while (coef < 3) {
@@ -305,8 +307,11 @@ namespace BelfegnarInc.BakeLab {
 				LightmapSettings.lightProbes = oldProbes;
 				foreach (var group in oldProbeGroups)
 					group.enabled = true;
+#if UNITY_EDITOR
+				UnityEditor.Lightmapping.giWorkflowMode = oldGiWorkflowMode;
 				UnityEditor.EditorUtility.SetDirty (LightmapSettings.lightProbes);
 				UnityEditor.SceneView.RepaintAll ();
+#endif
 			}
 		}
 	}

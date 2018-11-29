@@ -5,7 +5,7 @@
 Shader "BelfegnarInc/Baking/LightDirTangent" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
-		_NormalTex ("Normal (XYZ*0.5+0.5)", 2D) = "gray" {}
+		_BumpMap ("Normal (XYZ*0.5+0.5)", 2D) = "bump" {}
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -35,7 +35,7 @@ Shader "BelfegnarInc/Baking/LightDirTangent" {
 			};
 			
 			sampler2D _MainTex;
-			sampler2D _NormalTex;
+			sampler2D _BumpMap;
 			float4 _MainTex_ST;
 			
 			v2f vert (appdata v)
@@ -51,7 +51,7 @@ Shader "BelfegnarInc/Baking/LightDirTangent" {
 	
 			fixed4 frag (v2f i) : Color
 			{
-				fixed3 n = UnpackNormal(tex2D (_NormalTex, i.texcoord));
+				fixed3 n = UnpackNormal(tex2D (_BumpMap, i.texcoord));
 				return max(0.05, dot(i.color, n)).xxxx;
 			}
 			ENDCG

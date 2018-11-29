@@ -5,7 +5,7 @@
 Shader "BelfegnarInc/Baking/AO" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
-		_NormalTex ("Normal (XYZ*0.5+0.5)", 2D) = "gray" {}
+		_BumpMap ("Normal (XYZ*0.5+0.5)", 2D) = "bump" {}
 	}
 	SubShader {
 		Tags { "RenderType"="Opaque" }
@@ -33,7 +33,7 @@ Shader "BelfegnarInc/Baking/AO" {
 			};
 			
 			sampler2D _MainTex;
-			sampler2D _NormalTex;
+			sampler2D _BumpMap;
 			float4 _MainTex_ST;
 			
 			v2f vert (appdata v)
