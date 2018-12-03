@@ -125,8 +125,10 @@ public class VertexStreamComponent : MonoBehaviour {
 	[HideInInspector]
 	public Material[] originalMaterial;
 	public static Material vertexShaderMat;
+#endif
 
 	void Awake () {
+#if UNITY_EDITOR
 		// restore original material if we got saved with the preview material. 
 		// I tried to do this in a number of ways; using the pre/post serialization callbacks seemed
 		// like the best, but is actually not possible because they don't always both get called. In editor,
@@ -149,10 +151,7 @@ public class VertexStreamComponent : MonoBehaviour {
 				}
 			}
 		}
-	}
 #endif
-
-	void Start () {
 		Apply (!keepRuntimeData);
 		if (keepRuntimeData) {
 			var mf = GetComponent<MeshFilter> ();

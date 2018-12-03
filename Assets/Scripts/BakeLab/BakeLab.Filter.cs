@@ -236,7 +236,12 @@ namespace BelfegnarInc.BakeLab {
 			Timer timer
 		) {
 			timer.Start ();
-			EdgeBasedRegularizer (mesh.vertices, mesh.numVertices, mesh.triangles, mesh.numTriangles, ref regularizationMatrix);
+			if (mesh.regularizationMatrix != null) {
+				regularizationMatrix = mesh.regularizationMatrix;
+			} else {
+				EdgeBasedRegularizer (mesh.vertices, mesh.numVertices, mesh.triangles, mesh.numTriangles, ref regularizationMatrix);
+				mesh.regularizationMatrix = regularizationMatrix;
+			}
 			timer.Stop ();
 		}
 

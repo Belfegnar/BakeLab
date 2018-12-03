@@ -4,5 +4,6 @@
 *.userprefs
 Assets/Resources
 Library
+Builds
 obj
 Temp

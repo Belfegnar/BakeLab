@@ -107,8 +107,10 @@ namespace BelfegnarInc.BakeLab {
 				LightmapSettings.lightProbes = oldProbes;
 				foreach (var group in oldProbeGroups)
 					group.enabled = true;
+#if UNITY_EDITOR
 				UnityEditor.EditorUtility.SetDirty (LightmapSettings.lightProbes);
 				UnityEditor.SceneView.RepaintAll ();
+#endif
 			}
 
 			public static void BakeIrradianceThreeDir (
@@ -218,8 +220,10 @@ namespace BelfegnarInc.BakeLab {
 				LightmapSettings.lightProbes = oldProbes;
 				foreach (var group in oldProbeGroups)
 					group.enabled = true;
+#if UNITY_EDITOR
 				UnityEditor.EditorUtility.SetDirty (LightmapSettings.lightProbes);
 				UnityEditor.SceneView.RepaintAll ();
+#endif
 			}
 
 			public static void BakeIrradianceOneDir (

@@ -49,59 +49,7 @@ namespace BelfegnarInc.BakeLab {
 				var uMesh = filters[f].sharedMesh;
 				int meshId = -1;
 				if (!meshToID.TryGetValue (uMesh, out meshId)) {
-					Mesh mesh = new Mesh ();
-					mesh.numVertices = uMesh.vertexCount;
-
-					List<int> totalIndices = new List<int> ();
-					mesh.numTriangles = 0;
-					for (int t = 0; t < uMesh.subMeshCount; t++) {
-						mesh.numTriangles += (int) uMesh.GetIndexCount (t) / 3;
-						totalIndices.AddRange (uMesh.GetIndices (t));
-					}
-
-					mesh.vertices = uMesh.vertices;
-					mesh.normals = uMesh.normals;
-					mesh.tangents = uMesh.tangents;
-
-					//This part aims to fix stitching problems. May be slow though
-					if (config.fixStitches) {
-						mesh.processedVertices.Clear ();
-						var processedVerts = mesh.processedVertices;
-						float dist, pEps = config.fixStitchesPositionsDelta, nEps = config.fixStitchesNormalsDelta;
-						Vector3 v1, v2;
-						for (int i = 0, li = mesh.numVertices; i < li; i++) {
-#if DEBUG && UNITY_EDITOR
-							if (i % 1000 == 0 && UnityEditor.EditorUtility.DisplayCancelableProgressBar ("BelfegnarInc.BakeLab", "Load scene ...", i * 1f / li))
-								return false;
-#endif
-							v1 = mesh.vertices[i];
-							if (!processedVerts.ContainsKey (i))
-								for (int j = i + 1; j < li; j++) {
-									if (!processedVerts.ContainsKey (j)) {
-										v2 = mesh.vertices[j];
-										dist = (v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z);
-										if (dist <= pEps) {
-											v1 = mesh.normals[i];
-											v2 = mesh.normals[j];
-											dist = (v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z);
-											if (dist <= nEps) {
-												processedVerts.Add (j, i);
-											}
-										}
-									}
-								}
-						}
-						int index;
-						for (int i = 0, li = totalIndices.Count; i < li; i++) {
-							index = totalIndices[i];
-							if (processedVerts.ContainsKey (index)) {
-								totalIndices[i] = processedVerts[index];
-							}
-						}
-					}
-
-					mesh.triangles = totalIndices.ToArray ();
-					mesh.bounds = uMesh.bounds;
+					var mesh = Mesh.Create (uMesh, config);
 					meshId = numMeshes;
 					meshes.Add (mesh);
 					meshToID.Add (uMesh, numMeshes++);
@@ -514,6 +462,7 @@ namespace BelfegnarInc.BakeLab {
 	}
 
 	public class Mesh {
+		public bool fixStitches;
 		public int numVertices;
 		public Vector3[] vertices;
 		public Vector3[] normals;
@@ -522,6 +471,72 @@ namespace BelfegnarInc.BakeLab {
 		public int[] triangles;
 		public Bounds bounds;
 		public Dictionary<int, int> processedVertices = new Dictionary<int, int> ();
+		public MathNet.Numerics.LinearAlgebra.Double.SparseMatrix regularizationMatrix;
+
+		public static Mesh Create (UnityEngine.Mesh uMesh, BakeLabConfig config) {
+			Mesh mesh = null;
+
+			if (!Memory.Meshes.TryGetValue (uMesh, out mesh)) {
+				mesh = new Mesh ();
+				mesh.numVertices = uMesh.vertexCount;
+
+				List<int> totalIndices = new List<int> ();
+				mesh.numTriangles = 0;
+				for (int t = 0; t < uMesh.subMeshCount; t++) {
+					mesh.numTriangles += (int) uMesh.GetIndexCount (t) / 3;
+					totalIndices.AddRange (uMesh.GetIndices (t));
+				}
+
+				mesh.vertices = uMesh.vertices;
+				mesh.normals = uMesh.normals;
+				mesh.tangents = uMesh.tangents;
+
+				//This part aims to fix stitching problems. May be slow though
+				if (config.fixStitches) {
+					mesh.processedVertices.Clear ();
+					var processedVerts = mesh.processedVertices;
+					float dist, pEps = config.fixStitchesPositionsDelta, nEps = config.fixStitchesNormalsDelta;
+					Vector3 v1, v2;
+					for (int i = 0, li = mesh.numVertices; i < li; i++) {
+#if DEBUG && UNITY_EDITOR
+						if (i % 1000 == 0 && UnityEditor.EditorUtility.DisplayCancelableProgressBar ("BelfegnarInc.BakeLab", "Load scene ...", i * 1f / li))
+							return null;
+#endif
+						v1 = mesh.vertices[i];
+						if (!processedVerts.ContainsKey (i))
+							for (int j = i + 1; j < li; j++) {
+								if (!processedVerts.ContainsKey (j)) {
+									v2 = mesh.vertices[j];
+									dist = (v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z);
+									if (dist <= pEps) {
+										v1 = mesh.normals[i];
+										v2 = mesh.normals[j];
+										dist = (v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z);
+										if (dist <= nEps) {
+											processedVerts.Add (j, i);
+										}
+									}
+								}
+							}
+					}
+					int index;
+					for (int i = 0, li = totalIndices.Count; i < li; i++) {
+						index = totalIndices[i];
+						if (processedVerts.ContainsKey (index)) {
+							totalIndices[i] = processedVerts[index];
+						}
+					}
+				}
+				mesh.fixStitches = config.fixStitches;
+				mesh.triangles = totalIndices.ToArray ();
+				mesh.bounds = uMesh.bounds;
+				Memory.Meshes.Add (uMesh, mesh);
+			}
+			if (mesh != null && mesh.fixStitches != config.fixStitches) {
+
+			}
+			return mesh;
+		}
 	}
 
 	public struct Instance {
