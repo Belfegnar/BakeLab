@@ -1,0 +1,20 @@
+{
+    "name": "com.belfegnar.bakelab",
+    "author": "Belfegnar",
+    "displayName": "BakeLab",
+    "description": "BakeLab if a framework for baking different signals to mesh vertex attributes",
+    "unity": "2018.3",
+    "version": "2019.2.6",
+    "keywords": [
+        "bakelab",
+        "bake",
+        "vertex",
+        "color",
+        "ao"
+    ],
+    "dependencies": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Belfegnar/BakeLab.git"
+    }
+}
